@@ -1,5 +1,4 @@
-import {Component} from "react";
-import React from "react";
+import React, {Component} from "react";
 import moment from "moment";
 import ChatInput from "./ChatInput";
 
@@ -19,7 +18,7 @@ export default class Chat extends Component {
     componentDidMount() {
         fetch("http://localhost:8080/messages").then(res => res.json())
             .then(result => {
-                console.log(JSON.stringify(result));
+                    console.log(JSON.stringify(result));
                     this.setState({
                         isLoaded: true,
                         messages: result
@@ -53,8 +52,11 @@ export default class Chat extends Component {
             return <div>Loading...</div>;
         } else {
             return (<div>
-                {messages.map(msg =>
-                    <ul key={msg.localDateTime}>{msg.localDateTime + " :" + msg.text}</ul>)}
+                {messages.map(msg => {
+                    console.log(msg.localDateTime);
+                    return <ul key={msg.localDateTime}>{moment(msg.localDateTime).format('MMMM Do YYYY, h:mm:ss a') + " :" + msg.text}</ul>
+                })}
+
                 <ChatInput handleSubmit={this.handleSubmit} handleChange={this.handleChange}
                            value={this.state.value}/>
             </div>)
