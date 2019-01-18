@@ -1,6 +1,6 @@
-import {shallow} from 'enzyme';
 import Chat from "./Chat";
 import React from "react";
+import {shallow, mount} from "enzyme";
 
 describe('Chat', () => {
     it('should make a get request', () => {
@@ -12,11 +12,25 @@ describe('Chat', () => {
             })
     });
 
-    it('should request messages on component mount', () => {
-        // expect.assertions(1);
+    it('should call getMessages on componentDidMount', () => {
+        const spy = jest.spyOn(Chat.prototype, 'getMessages');
+        shallow(<Chat/>);
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
 
-        const wrapper = shallow(<Chat/>);
-        wrapper.instance().componentDidMount();
+    it('should make a request to API', () => {
+        const mockGet = jest.fn();
+        mockGet.mockReturnValueOnce(true);
 
+        jest.mock('./Request', () => ({
+            Request: jest.fn().mockImplementation(() => ({
+                get: mockGet
+            })),
+        }));
+
+        mount(<Chat/>);
+        //
+        // expect(mockGet).toHaveBeenCalledTimes(1);
+        // expect(mockGet).toHaveBeenCalledWith("asdf");
     });
 });

@@ -1,0 +1,18 @@
+import {get} from "./Request";
+const nock = require('nock');
+
+describe('Request', () => {
+
+    it('should make a request to URL', () => {
+
+        const response = {id: '123ABC'};
+        nock('http://localhost')
+            .get('/')
+            .reply(200, response);
+
+        return get('http://localhost').then(data => {
+            expect(data).toBeDefined();
+            expect(data).toEqual(response);
+        })
+    });
+});

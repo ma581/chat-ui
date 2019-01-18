@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import moment from "moment";
 import ChatInput from "./ChatInput";
+import {get} from "./Request";
 
 export default class Chat extends Component {
     constructor(props) {
@@ -15,10 +16,13 @@ export default class Chat extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    getMessages() {
+        return get("http://localhost:8080/messages").then(res => res.json());
+    }
+
     componentDidMount() {
-        fetch("http://localhost:8080/messages").then(res => res.json())
+        this.getMessages()
             .then(result => {
-                    console.log(JSON.stringify(result));
                     this.setState({
                         isLoaded: true,
                         messages: result
