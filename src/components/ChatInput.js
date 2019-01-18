@@ -4,7 +4,7 @@ export default function ChatInput(props) {
     return (
         <div className="input-group">
             <div className="input-group-prepend">
-                <span className="input-group-text">🐱</span>
+                <span className="input-group-text" role="img" aria-label="cat emoji">🐱</span>
             </div>
             <form onSubmit={props.handleSubmit}>
                 <input type="text" value={props.value}

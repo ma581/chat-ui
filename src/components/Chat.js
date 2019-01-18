@@ -9,7 +9,6 @@ export default class Chat extends Component {
         this.state = {
             error: null,
             isLoaded: false,
-            value: "",
             messages: []
         };
         this.handleChange = this.handleChange.bind(this);
@@ -17,7 +16,7 @@ export default class Chat extends Component {
     }
 
     getMessages() {
-        return get("http://localhost:8080/messages").then(res => res.json());
+        return get("http://localhost:8080/messages");
     }
 
     componentDidMount() {
@@ -31,9 +30,9 @@ export default class Chat extends Component {
                 error => {
                     this.setState({
                         isLoaded: false,
-                        error: error
+                        error: error,
                     })
-                })
+                });
     }
 
     handleSubmit(event) {
@@ -49,16 +48,23 @@ export default class Chat extends Component {
 
 
     render() {
-        const {error, isLoaded, value, messages} = this.state;
-        if (error) {
-            return <div>Error: {error.message}</div>;
-        } else if (!isLoaded) {
-            return <div>Loading...</div>;
-        } else {
+        const {error, isLoaded, messages} = this.state;
+
+        let status;
+        if(error){
+            status = <div id='status'>Error: {error.message}</div>;
+        }
+        else if (!isLoaded) {
+            status = <div id='status'>Loading...</div>;
+        }
+        {
             return (<div>
+                <h1>Hello</h1>
+                {status}
                 {messages.map(msg => {
                     console.log(msg.localDateTime);
-                    return <ul key={msg.localDateTime}>{moment(msg.localDateTime).format('MMMM Do YYYY, h:mm:ss a') + " :" + msg.text}</ul>
+                    return <ul
+                        key={msg.localDateTime}>{moment(msg.localDateTime).format('MMMM Do YYYY, h:mm:ss a') + " :" + msg.text}</ul>
                 })}
 
                 <ChatInput handleSubmit={this.handleSubmit} handleChange={this.handleChange}

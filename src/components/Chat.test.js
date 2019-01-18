@@ -1,6 +1,6 @@
 import Chat from "./Chat";
 import React from "react";
-import {shallow, mount} from "enzyme";
+import {shallow} from "enzyme";
 
 describe('Chat', () => {
     it('should make a get request', () => {
@@ -18,19 +18,18 @@ describe('Chat', () => {
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
-    it('should make a request to API', () => {
-        const mockGet = jest.fn();
-        mockGet.mockReturnValueOnce(true);
-
-        jest.mock('./Request', () => ({
-            Request: jest.fn().mockImplementation(() => ({
-                get: mockGet
-            })),
-        }));
-
-        mount(<Chat/>);
-        //
-        // expect(mockGet).toHaveBeenCalledTimes(1);
-        // expect(mockGet).toHaveBeenCalledWith("asdf");
+    it('should have empty array on waiting to retrieve messages', () => {
+        const wrapper = shallow(<Chat/>);
+        expect(wrapper.state().messages).toEqual([]);
+        expect(wrapper.find('#status').text()).toEqual('Loading...');
     });
+
+    it('should have empty array on waiting to retrieve messages', () => {
+        const wrapper = shallow(<Chat/>);
+        wrapper.instance().getMessages = jest.fn().mockImplementation(() => Promise.reject("Error"));
+        expect(wrapper.state().messages).toEqual([]);
+        expect(wrapper.state().error).toBeTruthy();
+        // expect(wrapper.find('#status').text()).toEqual('Error');
+    })
+
 });
